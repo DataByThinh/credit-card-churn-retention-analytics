@@ -1,7 +1,5 @@
 /*
 ============================================================
-File: 02_customer_segmentation.sql
-Project: Credit Card Customer Churn & Retention Analytics
 
 Business Question:
 Which customer segments have the highest churn rates?
@@ -10,8 +8,6 @@ Purpose:
 Compare churn rates across customer profile, account, and payment
 segments to identify groups that may require deeper investigation.
 
-Source Table:
-workspace.default.bronze_credit_card_customers
 
 Analysis Sections:
 1. Churn by Card Type
@@ -94,11 +90,6 @@ It does not appear to be a strong churn discriminator by itself.
 -- 3. CHURN BY ACCOUNT TENURE
 -- Business Question:
 -- Does customer tenure affect churn behavior?
---
--- Why bucket the variable?
--- account_age_months is numeric and contains many individual values.
--- Grouping customers into tenure bands makes the analysis easier
--- to interpret from a business perspective.
 -- ============================================================
 
 WITH customer_tenure AS (
@@ -144,11 +135,6 @@ in churn behavior.
 -- 4. CHURN BY LATE PAYMENT AMOUNT
 -- Business Question:
 -- Do customers with higher late payment amounts have higher churn rates?
---
--- Why bucket the variable?
--- late_payment_amount is continuous.
--- Grouping exact dollar values would create many small groups and
--- unstable churn rates, so payment bands are more meaningful.
 -- ============================================================
 
 WITH payment_band AS (
@@ -202,10 +188,6 @@ This shows association, not proof that late payment causes churn.
 -- 5. CHURN BY AGE GROUP
 -- Business Question:
 -- Do customers in different age groups have different churn rates?
---
--- Why bucket the variable?
--- Age is continuous, so age bands make the analysis easier
--- to compare and interpret.
 -- ============================================================
 
 WITH age_segment AS (
@@ -249,10 +231,6 @@ Add the observed result here after running the query.
 -- 6. CHURN BY INCOME BAND
 -- Business Question:
 -- Do customers with different income levels have different churn rates?
---
--- Why bucket the variable?
--- Income is continuous and contains many individual values.
--- Creating income bands makes churn comparisons more meaningful.
 -- ============================================================
 
 WITH income_segment AS (

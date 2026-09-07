@@ -1,7 +1,5 @@
 /*
 ============================================================
-File: 01_churn_baseline.sql
-Project: Credit Card Customer Churn & Retention Analytics
 
 Business Question:
 How large is the customer churn problem?
@@ -9,9 +7,6 @@ How large is the customer churn problem?
 Purpose:
 Establish the overall churn baseline before analyzing which
 customer segments and behaviors are associated with churn.
-
-Source Table:
-workspace.default.bronze_credit_card_customers
 
 Key Metrics:
 1. Total Customers
@@ -79,14 +74,4 @@ Approximately 19.46% of customers churned, while 80.54% were retained.
 
 This baseline will be used as a reference point when evaluating
 individual customer segments.
-
-For example:
-- A segment with churn around 19% is close to the overall baseline.
-- A segment with churn substantially above 19.46% may represent
-  a higher-risk customer group.
-- A segment substantially below 19.46% may represent a more stable group.
-
-Next Step:
-Segment customers by profile, account, and payment characteristics
-to identify groups with above-average churn.
 */
