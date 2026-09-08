@@ -34,19 +34,8 @@ SELECT
     financial_stress_level,
 
     COUNT(*) AS total_customers,
-
-    SUM(CASE
-        WHEN churned = 1 THEN 1
-        ELSE 0
-    END) AS churned_customers,
-
-    ROUND(
-        SUM(CASE
-            WHEN churned = 1 THEN 1
-            ELSE 0
-        END) * 100.0 / COUNT(*),
-        2
-    ) AS churn_rate_pct
+    SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) AS churned_customers,
+    ROUND(SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS churn_rate_pct
 
 FROM financial_stress_band
 
@@ -71,8 +60,6 @@ Interpretation:
 Customers with higher financial stress levels exhibit significantly higher churn rates. This suggests that targeted interventions for customers in the HIGH stress category could improve retention outcomes.
 ============================================================
 */
-
-
 
 /* 
 ============================================================
@@ -110,23 +97,8 @@ SELECT
     engagement_level,
 
     COUNT(*) AS total_customers,
-
-    SUM(
-        CASE
-            WHEN churned = 1 THEN 1
-            ELSE 0
-        END
-    ) AS churned_customers,
-
-    ROUND(
-        SUM(
-            CASE
-                WHEN churned = 1 THEN 1
-                ELSE 0
-            END
-        ) * 100.0 / COUNT(*),
-        2
-    ) AS churn_rate_pct
+    SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) AS churned_customers,
+    ROUND(SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS churn_rate_pct
 
 FROM engagement_band
 
@@ -151,3 +123,68 @@ Interpretation:
 Churn rate decreases as engagement increases, suggesting that lower-engagement customers are more likely to churn.
 ============================================================
 */
+
+/* 
+============================================================
+Customers Payment Delays Analysis
+Business Question:
+Do customers with more payment delays have a higher churn rate?
+Purpose:
+Compare churn rates across Low, Medium, and High payment delay groups to understand whether payment behavior is associated with churn.
+============================================================
+ */
+
+WITH payment_delay_band AS (
+
+    SELECT
+        churned,
+
+        CASE
+            WHEN payment_delay_count = 0 THEN 'NO DELAY'
+            WHEN payment_delay_count BETWEEN 1 AND 2 THEN 'LOW'
+            WHEN payment_delay_count BETWEEN 3 AND 5 THEN 'MEDIUM'
+            ELSE 'HIGH'
+        END AS payment_delay_level
+
+    FROM workspace.default.bronze_credit_card_customers
+)
+
+SELECT
+
+    CASE
+        WHEN payment_delay_level = 'NO DELAY' THEN '0 delay'
+        WHEN payment_delay_level = 'LOW' THEN '1-2 delays'
+        WHEN payment_delay_level = 'MEDIUM' THEN '3-5 delays'
+        WHEN payment_delay_level = 'HIGH' THEN '6+ delays'
+    END AS delay_range,
+
+    payment_delay_level,
+
+    COUNT(*) AS total_customers,
+    SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) AS churned_customers,
+    ROUND(SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*),2 ) AS churn_rate_pct
+
+FROM payment_delay_band
+
+GROUP BY payment_delay_level
+
+ORDER BY
+    CASE
+        WHEN payment_delay_level = 'NO DELAY' THEN 1
+        WHEN payment_delay_level = 'LOW' THEN 2
+        WHEN payment_delay_level = 'MEDIUM' THEN 3
+        WHEN payment_delay_level = 'HIGH' THEN 4
+    END;
+
+/*
+============================================================
+Results:
+0 delays: 70,059 customers, 12.46% churn rate
+1–2 delays: 27,281 customers, 31.92% churn rate
+3–5 delays: 2,599 customers, 75.49% churn rate
+6+ delays: 61 customers, 98.36% churn rate
+
+Interpretation:
+Churn rises sharply as payment delays increase, suggesting that repeated payment delays are strongly associated with customer churn.
+============================================================
+*/  
