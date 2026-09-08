@@ -188,3 +188,65 @@ Interpretation:
 Churn rises sharply as payment delays increase, suggesting that repeated payment delays are strongly associated with customer churn.
 ============================================================
 */  
+
+/* 
+============================================================
+Customers Utilization Ratio Analysis
+Business Question:
+Do customers with higher utilization ratios have a higher churn rate?
+Purpose:
+Compare churn rates across Low, Medium, and High utilization ratio groups to understand whether utilization behavior is associated with churn.
+============================================================
+ */
+
+WITH utilization_band AS (
+
+    SELECT
+        churned,
+
+        CASE
+            WHEN utilization_ratio < 0.30 THEN 'LOW'
+            WHEN utilization_ratio BETWEEN 0.30 AND 0.60 THEN 'MEDIUM'
+            ELSE 'HIGH'
+        END AS utilization_level
+
+    FROM workspace.default.bronze_credit_card_customers
+)
+
+SELECT
+
+    CASE
+        WHEN utilization_level = 'LOW' THEN 'Under 30%'
+        WHEN utilization_level = 'MEDIUM' THEN '30%-60%'
+        WHEN utilization_level = 'HIGH' THEN 'Above 60%'
+    END AS utilization_range,
+
+    utilization_level,
+
+    COUNT(*) AS total_customers,
+    SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) AS churned_customers,
+
+    ROUND(SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS churn_rate_pct
+
+FROM utilization_band
+
+GROUP BY utilization_level
+
+ORDER BY
+    CASE
+        WHEN utilization_level = 'LOW' THEN 1
+        WHEN utilization_level = 'MEDIUM' THEN 2
+        WHEN utilization_level = 'HIGH' THEN 3
+    END;
+
+/*
+============================================================
+Results:
+Low utilization (<30%): 35,982 customers, 15.35% churn
+Medium utilization (30–60%): 52,657 customers, 20.44% churn
+High utilization (>60%): 11,361 customers, 27.89% churn
+
+Interpretation:
+Yes, churn increases as utilization rises, suggesting that higher credit utilization is associated with greater churn risk
+============================================================
+*/  
