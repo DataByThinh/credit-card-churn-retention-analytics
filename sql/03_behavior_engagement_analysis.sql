@@ -250,3 +250,131 @@ Interpretation:
 Yes, churn increases as utilization rises, suggesting that higher credit utilization is associated with greater churn risk
 ============================================================
 */  
+
+/*
+============================================================
+Complaints count Analysis
+Business Question: Do customers with more complaints have higher churn rates?
+Purpose:
+Compare churn rates across complaint levels to evaluate whether repeated complaints are associated with customer churn.
+============================================================
+*/
+
+WITH complaint_band AS (
+
+    SELECT
+        churned,
+
+        CASE
+            WHEN complaints_count = 0 THEN 'NO COMPLAINT'
+            WHEN complaints_count = 1 THEN '1 COMPLAINT'
+            WHEN complaints_count BETWEEN 2 AND 3 THEN '2-3 COMPLAINTS'
+            ELSE '4+ COMPLAINTS'
+        END AS complaint_level
+
+    FROM workspace.default.bronze_credit_card_customers
+)
+
+SELECT
+    complaint_level,
+
+    COUNT(*) AS total_customers,
+
+    SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) AS churned_customers,
+    ROUND(SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*),2) AS churn_rate_pct
+
+FROM complaint_band
+
+GROUP BY complaint_level
+
+ORDER BY
+    CASE
+        WHEN complaint_level = 'NO COMPLAINT' THEN 1
+        WHEN complaint_level = '1 COMPLAINT' THEN 2
+        WHEN complaint_level = '2-3 COMPLAINTS' THEN 3
+        WHEN complaint_level = '4+ COMPLAINTS' THEN 4
+    END;
+
+/*
+Results:
+
+No complaint: 62,355 customers, 13.76% churn
+1 complaint: 23,439 customers, 22.18% churn
+2–3 complaints: 12,167 customers, 36.11% churn
+4+ complaints: 2,039 customers, 62.87% churn
+
+Interpretation:
+Churn increases consistently as complaint frequency rises, suggesting that more customer complaints are strongly associated with higher churn.
+*/
+
+/*
+============================================================
+Satisfaction Analysis:
+Business Question:
+Do customers with lower support satisfaction have higher churn rates?
+
+Purpose:
+Compare churn rates across satisfaction levels to evaluate whether poor support experience is associated with churn.
+*/
+
+WITH satisfaction_band AS (
+
+    SELECT
+        churned,
+        support_satisfaction,
+
+        CASE
+            WHEN support_satisfaction < 2 THEN 'VERY DISSATISFIED'
+            WHEN support_satisfaction < 3 THEN 'DISSATISFIED'
+            WHEN support_satisfaction < 4 THEN 'NEUTRAL'
+            WHEN support_satisfaction < 4.5 THEN 'SATISFIED'
+            ELSE 'VERY SATISFIED'
+        END AS satisfaction_level
+
+    FROM workspace.default.bronze_credit_card_customers
+)
+
+SELECT
+
+    CASE
+        WHEN satisfaction_level = 'VERY DISSATISFIED' THEN '1.0 - 1.9'
+        WHEN satisfaction_level = 'DISSATISFIED' THEN '2.0 - 2.9'
+        WHEN satisfaction_level = 'NEUTRAL' THEN '3.0 - 3.9'
+        WHEN satisfaction_level = 'SATISFIED' THEN '4.0 - 4.4'
+        WHEN satisfaction_level = 'VERY SATISFIED' THEN '4.5 - 5.0'
+    END AS score_range,
+
+    satisfaction_level,
+
+    COUNT(*) AS total_customers,
+
+    SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) AS churned_customers,
+
+    ROUND(SUM(CASE WHEN churned = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*),2) AS churn_rate_pct
+
+FROM satisfaction_band
+
+GROUP BY satisfaction_level
+
+ORDER BY
+    CASE
+        WHEN satisfaction_level = 'VERY DISSATISFIED' THEN 1
+        WHEN satisfaction_level = 'DISSATISFIED' THEN 2
+        WHEN satisfaction_level = 'NEUTRAL' THEN 3
+        WHEN satisfaction_level = 'SATISFIED' THEN 4
+        WHEN satisfaction_level = 'VERY SATISFIED' THEN 5
+    END;
+
+/*
+Results:
+
+Very Dissatisfied (1.0–1.9): 6,761 customers, 53.41% churn
+Dissatisfied (2.0–2.9): 18,630 customers, 30.90% churn
+Neutral (3.0–3.9): 43,307 customers, 16.59% churn
+Satisfied (4.0–4.4): 19,237 customers, 10.27% churn
+Very Satisfied (4.5–5.0): 12,065 customers, 7.72% churn
+
+Interpretation:
+Churn decreases consistently as support satisfaction increases. Customers with very low satisfaction show a much higher churn rate, suggesting that poor support experience is strongly associated with customer churn.
+============================================================
+*/  
