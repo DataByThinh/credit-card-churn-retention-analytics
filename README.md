@@ -40,26 +40,8 @@
 ## 🏗️ Architecture
 
 <p align="center">
-  <img src="assets/churn-architecture.png" width="100%" />
+  <img src=""C:\Users\ASUS\Downloads\3de89d91-e5ac-495b-9b38-847025c33b0c.png"" width="100%" />
 </p>
-
-```text
-Kaggle CSV
-    ↓
-Databricks + Delta Lake
-    ↓
-Bronze → Silver → Gold
-    ↓
-SQL / dbt Analytics
-    ↓
-Machine Learning + SHAP
-    ↓
-Churn Predictions
-    ↓
-Power BI
-    ↓
-Retention Decisions
-```
 
 ---
 
