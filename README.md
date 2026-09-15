@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/project-overview.png" width="100%" />
+  <img src="" width="100%" />
 </p>
 
 > **Which customers are leaving, why are they leaving, and who should the bank retain first?**
@@ -40,7 +40,7 @@
 ## 🏗️ Architecture
 
 <p align="center">
-  <img src=""C:\Users\ASUS\Downloads\3de89d91-e5ac-495b-9b38-847025c33b0c.png"" width="100%" />
+  <img src="https://github.com/DataByThinh/credit-card-churn-retention-analytics/blob/main/picture/architecture.png?raw=true" width="100%" />
 </p>
 
 ---
