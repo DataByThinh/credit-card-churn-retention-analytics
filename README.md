@@ -15,9 +15,6 @@
   End-to-end customer churn analytics for consumer banking.
 </p>
 
-<p align="center">
-  <img src="assets/project-overview.png" width="100%" />
-</p>
 
 > **Which customers are leaving, why are they leaving, and who should the bank retain first?**
 >
@@ -40,15 +37,14 @@
 ## 🏗️ Architecture
 
 <p align="center">
-  <img src=""C:\Users\ASUS\Downloads\3de89d91-e5ac-495b-9b38-847025c33b0c.png"" width="100%" />
+  <img src="https://github.com/DataByThinh/credit-card-churn-retention-analytics/blob/main/picture/architecture.png?raw=true" width="100%" />
 </p>
 
 ---
 
 ## 🥉 → 🥈 → 🥇 Data Pipeline
 
-<p align="center">
-  <img src="assets/medallion-pipeline.png" width="90%" />
+
 </p>
 
 | Layer         | Purpose                                      |
@@ -65,8 +61,7 @@
 
 ## 🔍 Customer Churn Analytics
 
-<p align="center">
-  <img src="assets/churn-segmentation.png" width="100%" />
+
 </p>
 
 Customer behavior is segmented across:
@@ -90,8 +85,7 @@ Customer
 
 ## 🤖 Predictive Churn Modeling
 
-<p align="center">
-  <img src="assets/ml-pipeline.png" width="90%" />
+
 </p>
 
 ```text
@@ -120,8 +114,7 @@ Retention Priority
 
 ## 🧠 Explainable AI
 
-<p align="center">
-  <img src="assets/shap-drivers.png" width="100%" />
+
 </p>
 
 SHAP connects model predictions back to business behavior:
@@ -134,8 +127,7 @@ SHAP connects model predictions back to business behavior:
 
 ## 🎯 Retention Intelligence
 
-<p align="center">
-  <img src="assets/retention-priority.png" width="90%" />
+
 </p>
 
 ```text
@@ -157,8 +149,7 @@ High Customer Value
 
 ## 📊 Power BI Dashboard
 
-<p align="center">
-  <img src="assets/powerbi-dashboard.png" width="100%" />
+
 </p>
 
 ### Dashboard Views
@@ -179,8 +170,7 @@ High-value customers at risk • Retention priorities • What-if scenarios
 
 ## 💰 What-If Retention Analysis
 
-<p align="center">
-  <img src="assets/what-if-retention.png" width="90%" />
+
 </p>
 
 ```text
